@@ -29,6 +29,7 @@ io.on('connection', function(socket){
 
         /*Aca tu ya convertiste el token en un usuario y me envias solo el
         correo para saber que usuario se unio*/
+        
         socket.broadcast.emit('connectUsers', {numbers : connections})
 
         socket.broadcast.emit('userJoin', {
