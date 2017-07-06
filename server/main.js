@@ -13,13 +13,33 @@ app.get('/hello', function(req,res){
 
 io.on('connection', function(socket){
     console.log('Alguien se ha conectado con socket');
-    var data1;
+    var addUser = false;
 
-    connections++;
+    
 
-    console.log('conexiones activas: '+connections);
+    socket.on('addUser', function(token){
+        if(addUser) return;
 
-    socket.broadcast.emit('connectUsers', {numbers : connections})
+        socket.username = token;
+        connections++;
+        addUser = true;
+
+        console.log('conexiones activas: '+connections);
+        console.log(socket.username);
+
+        /*Aca tu ya convertiste el token en un usuario y me envias solo el
+        correo para saber que usuario se unio*/
+        socket.broadcast.emit('connectUsers', {numbers : connections})
+
+        socket.broadcast.emit('userJoin', {
+            /* En ves de enviarme el tocken de nuevo, solo enviaria el correo */
+            username: socket.username,
+            numbers: connections
+        });
+    });
+
+
+   
 
     socket.on('add-message',function(data) {
         console.log(data);
@@ -57,10 +77,18 @@ io.on('connection', function(socket){
     })
 
     socket.on('disconnect', function(){
-        connections--
-        console.log('Conexiones activas: '+connections);
+        if (addUser) {
+            --connections;
+            console.log('Conexiones activas: '+connections);
 
-        socket.broadcast.emit('connectUsers', {numbers : connections})
+            socket.broadcast.emit('connectUsers', {numbers : connections})
+
+            console.log("Se fue el usuario :"+socket.username);
+            socket.broadcast.emit('userLeft', {
+                username: socket.username,
+                numbers: connections
+            });
+        }
     })
 })
 
