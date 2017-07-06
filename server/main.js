@@ -24,8 +24,36 @@ io.on('connection', function(socket){
     socket.on('add-message',function(data) {
         console.log(data);
    
-   
         socket.broadcast.emit('response', data);
+    })
+
+
+
+    socket.on('send-title',function(data) {
+        console.log(data);
+   
+        socket.broadcast.emit('title', data);
+    })
+
+    socket.on('add-message1',function(data) {
+        console.log(data);
+   
+   
+        socket.broadcast.emit('response1', data);
+    })
+
+    socket.on('add-message2',function(data) {
+        console.log(data);
+   
+   
+        socket.broadcast.emit('response2', data);
+    })
+
+    socket.on('add-message3',function(data) {
+        console.log(data);
+   
+   
+        socket.broadcast.emit('response3', data);
     })
 
     socket.on('disconnect', function(){
@@ -37,6 +65,7 @@ io.on('connection', function(socket){
 })
 
 
-server.listen(8080,function(){
-    console.log("Servidor correndo en Http://localhost:8080");
+
+server.listen(3000,function(){
+    console.log("Servidor correndo en Http://localhost:3000");
 });
